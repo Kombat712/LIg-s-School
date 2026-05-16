@@ -1,0 +1,69 @@
+# Компилированные файлы и артефакты сборки
+*.dll
+*.exe
+*.pdb
+*.cache
+*.class
+*.com
+*.suo
+*.nupkg
+*.ncrunchsolution
+*.dotCover
+*.vsidx
+*.v2
+
+# Логи и базы данных
+*.log
+*.sqlite
+logs/
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Временные и скомпилированные файлы
+bin/
+obj/
+TestResults/
+node_modules/
+dist/
+dist-ssr/
+*.local
+publish/
+.vs/
+
+# Файлы настроек редакторов и IDE
+.vscode/
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+ehthumbs.db
+Icon?
+Thumbs.db
+
+# Конфигурационные файлы Visual Studio
+*.suo
+*.user
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Файлы ReSharper
+/_ReSharper.*/
+*.ReSharper.*
+
+# Папки и файлы, относящиеся к пакетам
+packages/
+NuGet.exe
+_[Ss]cripts
+
+# Файлы, содержащие чувствительные данные (НЕ добавлять в репозиторий!)
+appsettings.json
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+.env.*.local
