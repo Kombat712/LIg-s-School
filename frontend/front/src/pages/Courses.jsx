@@ -4,7 +4,7 @@ import "./../assets/style/style_courses.css";
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const Courses = () => {
-    const [courses, setCourses] = useState([]); 
+    const [courses, setCourses] = useState([]);
     const [selectedCourse, setSelectedCourse] = useState(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
 
@@ -71,9 +71,8 @@ const Courses = () => {
                 ))}
                 {selectedCourse && (
                     <div
-                        className={`modal-overlay ${isModalOpen ? "open" : ""} ${
-                            !isModalOpen && selectedCourse ? "closing" : ""
-                        }`}
+                        className={`modal-overlay ${isModalOpen ? "open" : ""} ${!isModalOpen && selectedCourse ? "closing" : ""
+                            }`}
                         onClick={closeModalpopupwindow}
                     >
                         <div className="modal-content" onClick={(e) => e.stopPropagation()}>

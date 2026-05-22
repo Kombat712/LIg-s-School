@@ -1,16 +1,16 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 
-import dish from "./../assets/images/dish.png";
-import icon_gendr_forms from "./../assets/images/icon_gendr_forms.png";
-import many_faces from "./../assets/images/many_faces.png";
-import reverse_x from "./../assets/images/reverse_x.png";
+import dish from "./../assets/image/dish.png";
+import icon_gendr_forms from "./../assets/image/icon_gendr_forms.png";
+import many_faces from "./../assets/image/many_faces.png";
+import reverse_x from "./../assets/image/reverse_x.png";
 
 import "./../assets/style/style_skills_tree.css";
 import QuizDayStats from "./../hooks/QuizDayStats";
 import useQuizzesBySkill from "./../hooks/useQuizzesBySkill";
 import ProtectedRoute from "../hooks/ProtectedRoute";
-import MessageModal from '../components/message-modal/MessageModal'; 
+import MessageModal from '../components/message-modal/MessageModal';
 
 const Strongformstree = () => {
   const skillName = "Могучие Формы";
@@ -33,7 +33,7 @@ const Strongformstree = () => {
 
   const renderNavLink = (quiz) => {
     const completedQuiz = quizzes.find((q) => q.name === quiz.name);
-  
+
     if (!completedQuiz) {
       return (
         <div className="cir-cont loading gray-circle">
@@ -44,13 +44,13 @@ const Strongformstree = () => {
         </div>
       );
     }
-  
+
     const isAccessible = completedQuiz.canAccess;
     const isCompleted = completedQuiz.isCompleted;
     const circleClass = isCompleted ? "green-circle" : "gray-circle";
-  
-    
-  
+
+
+
     if (availableQuizzes === 0) {
       return (
         <div key={quiz.name} className={`cir-cont ${circleClass} quiz-disabled`}>
@@ -76,7 +76,7 @@ const Strongformstree = () => {
         </div>
       );
     }
-  
+
     return (
       <NavLink to={quiz.path} className={`cir-cont ${circleClass}`}>
         <div className="quiz-circle">
@@ -86,7 +86,7 @@ const Strongformstree = () => {
       </NavLink>
     );
   };
-  
+
 
   return (
     <ProtectedRoute>

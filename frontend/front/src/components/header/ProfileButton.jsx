@@ -1,6 +1,6 @@
 import { useAuth } from "./../../hooks/AuthContext";
 import { NavLink } from "react-router-dom";
-import profile from "./../../assets/images/profile-icon.png";
+import profile from "./../../assets/image/profile-icon.png";
 import "./stylehead.css";
 
 const ProfileButton = () => {
@@ -8,14 +8,14 @@ const ProfileButton = () => {
 
     if (isAuthenticated === null) {
         return (
-        <NavLink to="/auth" className="profile">
-        <img src={profile} alt="Иконка профиля" />
-        </NavLink>);
+            <NavLink to="/auth" className="profile">
+                <img src={profile} alt="Иконка профиля" />
+            </NavLink>);
     }
 
     return (
         <NavLink to={isAuthenticated ? "/profile" : "/auth"} className="profile">
-          <img src={profile} alt="Иконка профиля" />
+            <img src={profile} alt="Иконка профиля" />
         </NavLink>
     );
 };

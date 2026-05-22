@@ -1,11 +1,11 @@
 import "./style_footer.css";
 
-import vk from './../../assets/images/vk.png';
-import sfedu from './../../assets/images/sfedu.png';
-import gitHub from './../../assets/images/github.png';
+import vk from './../../assets/image/vk.png';
+import sfedu from './../../assets/image/sfedu.png';
+import gitHub from './../../assets/image/github.png';
 
 const Footer = () => {
-    return (
+	return (
 		<footer className="footer">
 			<div className="footer_container">
 				<div className="footer__wrapper">

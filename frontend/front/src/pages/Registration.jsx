@@ -1,4 +1,4 @@
-import logom from "./../assets/images/logo.png";
+import logom from "./../assets/image/logo.png";
 import './../assets/style/style_registration.css';
 import { useState } from "react";
 import axios from "axios";
@@ -43,19 +43,19 @@ function Registration() {
 
         let isValid = true;
 
-        
+
         if (!validateEmail(formData.email)) {
             setEmailError("Некорректный формат email.");
             isValid = false;
         }
 
-        
+
         if (!validatePassword(formData.password, formData.confirmPassword)) {
             setPasswordError("Пароли не совпадают.");
             isValid = false;
         }
 
-        
+
         if (!isValid) {
             return;
         }
@@ -64,7 +64,7 @@ function Registration() {
             const response = await axios.post(`${API_BASE_URL}/register/registration`, formData);
             setMessage(response.data.message);
 
-            
+
             navigate("/emlverif");
         } catch (error) {
             setMessage("Ошибка: " + (error.response?.data?.[0]?.description || "Неизвестная ошибка"));
@@ -117,7 +117,7 @@ function Registration() {
                         required
                     />
 
-                    
+
                     <button type="submit">Создать аккаунт</button>
                 </form>
 

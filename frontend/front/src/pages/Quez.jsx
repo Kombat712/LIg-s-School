@@ -61,8 +61,8 @@ const Quez = () => {
     }
   };
 
-  
-  
+
+
   useEffect(() => {
     if (!isCompleted) {
       const handleBeforeUnload = (e) => {
@@ -89,13 +89,15 @@ const Quez = () => {
         }
       };
 
-      function unblock() { navigate((location, action) => {
-        if (action !== 'POP' && !isCompleted) {
-          const confirmLeave = window.confirm("Вы уверены? Прогресс будет потерян!");
-          return !confirmLeave; // false отменяет навигацию
-        }
-        return true;
-      });}
+      function unblock() {
+        navigate((location, action) => {
+          if (action !== 'POP' && !isCompleted) {
+            const confirmLeave = window.confirm("Вы уверены? Прогресс будет потерян!");
+            return !confirmLeave; // false отменяет навигацию
+          }
+          return true;
+        });
+      }
 
       window.addEventListener('beforeunload', handleBeforeUnload);
       document.addEventListener('click', handleClick, true); // Используем capture phase
@@ -107,7 +109,7 @@ const Quez = () => {
       };
     }
   }, [isCompleted, navigate]);
-  
+
 
   useEffect(() => {
     if (isAuthenticated === false) {
@@ -230,7 +232,7 @@ const Quez = () => {
           completeQuiz(newCount);
           setIsCompleted(true);
         }
-        
+
         return newCount;
       });
     }
@@ -247,21 +249,21 @@ const Quez = () => {
         credentials: "include",
         body: JSON.stringify({ quizName, correctAnswersCount: finalCorrectAnswersCount }),
       });
-  
+
       if (!response.ok) {
         console.error("Failed to complete quiz:", response.status);
         throw new Error("Ошибка завершения квиза");
       }
-  
+
       const result = await response.json();
-      setIsCompleted(true); 
+      setIsCompleted(true);
       setQuizResult(result);
     } catch (error) {
       console.error("Ошибка при завершении квиза:", error);
       setFeedback("Ошибка при завершении квиза.");
     }
   };
-  
+
 
   const currentQuestion = questions[currentQuestionIndex];
 
@@ -304,7 +306,7 @@ const Quez = () => {
                 <button>
                   Вернуться на дерево
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-                       xmlns="http://www.w3.org/2000/svg">
+                    xmlns="http://www.w3.org/2000/svg">
                     <path
                       d="M17 7L15.59 8.41L18.17 11H8V13H18.17L15.59 15.58L17 17L22 12L17 7ZM4 5H12V3H4C2.9 3 2 3.9 2 5V19C2 20.1 2.9 21 4 21H12V19H4V5Z"
                       fill="white" />
@@ -335,7 +337,7 @@ const Quez = () => {
                 <button>
                   Вернуться на дерево
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-                       xmlns="http://www.w3.org/2000/svg">
+                    xmlns="http://www.w3.org/2000/svg">
                     <path
                       d="M17 7L15.59 8.41L18.17 11H8V13H18.17L15.59 15.58L17 17L22 12L17 7ZM4 5H12V3H4C2.9 3 2 3.9 2 5V19C2 20.1 2.9 21 4 21H12V19H4V5Z"
                       fill="white" />
@@ -348,7 +350,7 @@ const Quez = () => {
       </div>
     </ProtectedRoute>
   );
-  
+
 };
 
 export default Quez;

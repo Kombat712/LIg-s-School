@@ -1,4 +1,4 @@
-import logom from "./../assets/images/logo.png";
+import logom from "./../assets/image/logo.png";
 import './../assets/style/style_authorization.css';
 import { useAuth } from './../hooks/AuthContext';
 import { NavLink, useNavigate } from 'react-router-dom';
@@ -15,7 +15,7 @@ const Login = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const { isAuthenticated, checkAuthStatus } = useAuth();
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
 
   useEffect(() => {
@@ -51,7 +51,7 @@ const Login = () => {
     }
 
     try {
-      const response = await fetch(`${API_BASE_URL}/Login/login`, { 
+      const response = await fetch(`${API_BASE_URL}/Login/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userName, password, rememberMe }),
@@ -62,8 +62,8 @@ const Login = () => {
 
       if (response.ok) {
         setMessage("Авторизация успешна!");
-        checkAuthStatus(); 
-        navigate("/"); 
+        checkAuthStatus();
+        navigate("/");
       }
       else {
         if (data.message === "User account is locked out.") {

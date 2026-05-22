@@ -1,9 +1,9 @@
 import './../assets/style/style_shop.css';
 import React, { useState, useEffect } from 'react';
 import QuizDayStats from "./../hooks/QuizDayStats";
-import coinImage from './../assets/images/monetka.png'; 
+import coinImage from './../assets/image/monetka.png';
 import ProtectedRoute from "../hooks/ProtectedRoute";
-import MessageModal from '../components/message-modal/MessageModal'; 
+import MessageModal from '../components/message-modal/MessageModal';
 
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
@@ -50,7 +50,7 @@ const Shop = () => {
     }, []);
 
     const closeMessage = () => {
-    setMessage({ type: '', text: '' });
+        setMessage({ type: '', text: '' });
     };
 
     const handlePurchase = async (quantity) => {
@@ -129,7 +129,7 @@ const Shop = () => {
                         <div className='balance'>{balance}</div>
                         <span className="quiz-counter">{availableQuizzes}/{totalQuizzes} Количество квизов в день</span>
                     </div>
-                    
+
                 </div>
 
 
@@ -158,24 +158,24 @@ const Shop = () => {
                 <MessageModal message={message} onClose={closeMessage} />
 
                 {!showPromoInput && (
-                        <button className="promo-button" onClick={() => setShowPromoInput(true)}>Активировать промокод</button>
-                    )}
+                    <button className="promo-button" onClick={() => setShowPromoInput(true)}>Активировать промокод</button>
+                )}
 
-                    {showPromoInput && (
-                        <div className="promo-input-container">
-                            <input
-                                type="text"
-                                className="promo-input"
-                                placeholder="Введите промокод"
-                                value={promoCode}
-                                onChange={(e) => setPromoCode(e.target.value)}
-                            />
-                            <div className="promo-buttons">
-                                <button onClick={handlePromoSubmit} className="promo-submit">Применить</button>
-                                <button onClick={() => { setShowPromoInput(false); setPromoCode(''); }} className="promo-cancel">Отмена</button>
-                            </div>
+                {showPromoInput && (
+                    <div className="promo-input-container">
+                        <input
+                            type="text"
+                            className="promo-input"
+                            placeholder="Введите промокод"
+                            value={promoCode}
+                            onChange={(e) => setPromoCode(e.target.value)}
+                        />
+                        <div className="promo-buttons">
+                            <button onClick={handlePromoSubmit} className="promo-submit">Применить</button>
+                            <button onClick={() => { setShowPromoInput(false); setPromoCode(''); }} className="promo-cancel">Отмена</button>
                         </div>
-                    )}
+                    </div>
+                )}
             </div>
         </ProtectedRoute>
     );
