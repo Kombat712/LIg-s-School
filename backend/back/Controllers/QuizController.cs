@@ -89,7 +89,7 @@ namespace mabyWorking.Controllers
             var skillStats = await _context.SkillStats.FirstOrDefaultAsync(s => s.StatsId == userStats.Id && s.SkillId == skill.Id);
             if (skillStats == null) return NotFound("Статистика скилла не найдена");
             var quizStats = await _context.QuizStats.FirstOrDefaultAsync(s => s.StatsId == userStats.Id && s.QuizId == quiz.Id);
-            if (skillStats == null) return NotFound("Статистика квиза не найдена");
+            if (quizStats == null) return NotFound("Статистика квиза не найдена");
             var lastQuestion = await _context.Questions
                 .Where(q => q.QuizId == quiz.Id)
                 .OrderByDescending(q => q.Id)
