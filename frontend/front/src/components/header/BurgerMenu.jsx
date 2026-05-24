@@ -22,7 +22,7 @@ const BurgerMenu = () => {
             {click && <nav className="nav-links">
                 {<NavLink  to="/profile" onClick={closeMenu}>Профиль</NavLink>}
                 <NavLink to="/course" onClick={closeMenu}>Курсы</NavLink>
-                <NavLink to="/skills" onClick={closeMenu}>Дерево навыков</NavLink>
+                <NavLink to="/maintree" onClick={closeMenu}>Дерево навыков</NavLink>
                 <NavLink to="/shop" onClick={closeMenu}>Магазин</NavLink> 
             </nav>}
             </>)
@@ -34,7 +34,7 @@ const BurgerMenu = () => {
             {click && <nav className="nav-links">
                 <NavLink to={isAuthenticated ? "/profile" : "/auth"} onClick={closeMenu}>Профиль</NavLink>
                 <NavLink to="/course" onClick={closeMenu}>Курсы</NavLink>
-                <NavLink to="/skills" onClick={closeMenu}>Дерево навыков</NavLink>
+                <NavLink to="/maintree" onClick={closeMenu}>Дерево навыков</NavLink>
                 <NavLink to="/shop" onClick={closeMenu}>Магазин</NavLink> 
             </nav>}
         </>

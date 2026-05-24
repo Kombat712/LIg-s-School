@@ -18,7 +18,9 @@ import Type_and_Types from './pages/Type_and_Types';
 import Profile from './pages/Profile';
 import Pages_Bingo from './pages/Pages_Bingo';
 import Take_or_No from './pages/Take_or_No';
-
+import OrgTest from './pages/OrgTest';
+import OrgTree from './pages/OrgTree';
+import MainTree from './pages/MainTree';
 
 function App() {
   return (
@@ -35,12 +37,15 @@ function App() {
           <Route path="/auth" element={<Authorization />} />
           <Route path="/emlverif" element={<Emailverif />} />
           <Route path="/confirm-email" element={<EmailCompleted />} />
+          <Route path="/maintree" element={<MainTree />} />
           <Route path="/skills" element={<Skillstree />} />
           <Route path="/stngform" element={<Strongformstree />} />
           <Route path="/quiz/:quizName" element={<Quez />} />
           <Route path="/quiz" element={<Quez />} />
           <Route path="/bingo" element={<Pages_Bingo />} />
           <Route path="/takeOrNoTake" element={<Take_or_No />} />
+          <Route path="/orgtest/:testName" element={<OrgTest />} />
+          <Route path="/orgtree" element={<OrgTree />} />
         </Routes>
       </Router>
     </AuthProvider>
