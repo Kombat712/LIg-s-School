@@ -18,7 +18,7 @@ const Head = () => {
         <>
           <nav className="nav-links">
             <NavLink to="/course">Курсы</NavLink>
-            <NavLink to="/skills">Дерево навыков</NavLink>
+            <NavLink to="/maintree">Дерево навыков</NavLink>
             <NavLink to="/shop">Магазин</NavLink>
           </nav>
           <ProfileButton />
