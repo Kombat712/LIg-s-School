@@ -5,6 +5,8 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 export const QuizDayStats = () => {
     const [availableQuizzes, setAvailableQuizzes] = useState(0);
     const [totalQuizzes, setTotalQuizzes] = useState(3);
+    const [availableOrgTests, setAvailableOrgTests] = useState(0);
+    const [totalOrgTests, setTotalOrgTests] = useState(3);
 
     const fetchUserData = useCallback(async () => {
         try {
@@ -19,6 +21,8 @@ export const QuizDayStats = () => {
             const data = await response.json();
             setTotalQuizzes(data.quizLimit);
             setAvailableQuizzes(data.quizPassed);
+            setTotalOrgTests(data.orgTestLimit);
+            setAvailableOrgTests(data.orgTestPassed);
         } catch (error) {
             console.error("Ошибка получения данных пользователя:", error);
         }
@@ -28,7 +32,11 @@ export const QuizDayStats = () => {
         fetchUserData();
     }, [fetchUserData]);
 
-    return { availableQuizzes, totalQuizzes, refreshStats: fetchUserData };
+    return { 
+        availableQuizzes, totalQuizzes, 
+        availableOrgTests, totalOrgTests, 
+        refreshStats: fetchUserData 
+    };
 };
 
 export default QuizDayStats;
