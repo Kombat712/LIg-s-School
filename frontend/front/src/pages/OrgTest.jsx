@@ -127,7 +127,13 @@ const OrgTest = () => {
       setSelectedAnswers([]);
       setFeedback("");
     } else {
-      completeTest(correctAnswersCount);
+      // используем актуальный count через колбэк setState
+      setCorrectAnswersCount(prev => {
+        if (!isCompleted) {
+          completeTest(prev);
+        }
+        return prev;
+      });
     }
   };
 
