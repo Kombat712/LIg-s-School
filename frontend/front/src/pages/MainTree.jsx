@@ -2,7 +2,8 @@ import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import ProtectedRoute from "../hooks/ProtectedRoute";
 import "./../assets/style/style_skills_tree.css";
-
+import chgk from "./../assets/image/svoyak50.png"
+import org from "./../assets/image/predposilki.png"
 const MainTree = () => {
   return (
     <ProtectedRoute>
@@ -13,12 +14,12 @@ const MainTree = () => {
 
         <div className="container_second" style={{ gap: '20%' }}>
           <NavLink to="/skills" className="skil-cont">
-            <img src="/tree/target.png" alt="ЧГК" />
+            <img src={chgk} alt="ЧГК" />
             <p>ЧГК Игрок</p>
           </NavLink>
 
           <NavLink to="/orgtree" className="skil-cont">
-            <img src="/tree/target.png" alt="ОРГ" />
+            <img src={org} alt="ОРГ" />
             <p>Организатор игр</p>
           </NavLink>
         </div>

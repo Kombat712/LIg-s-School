@@ -4,46 +4,47 @@
     align-items: center;
     padding: 20px;
     font-family: Rubik, sans-serif;
-    min-height: 100vh; 
-    box-sizing: border-box; 
-    padding-top: 10px; 
+    min-height: 100vh;
+    box-sizing: border-box;
+    padding-top: 10px;
 }
 
 .header-info {
     text-align: center;
     margin-bottom: 20px;
-    width: 100%; 
+    width: 100%;
 
 }
 
 
 
 .header-info h1 {
-    font-size: 2em; 
-    font-weight: bold; 
+    font-size: 2em;
+    font-weight: bold;
     margin: 0;
-    color: #000000; 
+    color: #000000;
 }
 
 .balance-info {
     display: flex;
-    align-items: center; 
+    align-items: center;
     justify-content: center;
-    font-size: 1.2em; 
+    font-size: 1.2em;
     margin-top: 10px;
-    flex-wrap: wrap; 
+    flex-wrap: wrap;
 }
-.balance{
-    color: #8a2be2;
-    font-size: 1em; 
-    font-weight: bold; 
+
+.balance {
+    color: #f39c12;
+    font-size: 1em;
+    font-weight: bold;
 }
 
 .coin-icon {
-    width: 1em; 
-    height: 1em; 
+    width: 1em;
+    height: 1em;
     margin-right: 10px;
-    
+
 }
 
 .quiz-counter {
@@ -56,8 +57,8 @@
     display: flex;
     justify-content: center;
     width: 100%;
-    flex-wrap: wrap; 
-    
+    flex-wrap: wrap;
+
 }
 
 .purchase-item {
@@ -67,10 +68,10 @@
     padding: 20px;
     border: 1px solid #cccccc;
     border-radius: 10px;
-    width: 90%; 
-    max-width: 200px; 
+    width: 90%;
+    max-width: 200px;
     text-align: center;
-    margin: 10px; 
+    margin: 10px;
     background-color: #fff;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
@@ -78,7 +79,7 @@
 .icon-circle {
     width: 50px;
     height: 50px;
-    background-color: #8a2be2; 
+    background-color: #8a2be2;
     border-radius: 50%;
     margin-bottom: 10px;
     display: flex;
@@ -91,15 +92,15 @@
 
 .item-description {
     margin: 10px 0;
-    height: 60px; 
+    height: 60px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 0.9em; 
+    font-size: 0.9em;
 }
 
 .purchase-button {
-    background-color: #8a2be2; 
+    background-color: #8a2be2;
     color: white;
     border: none;
     padding: 10px 20px;
@@ -107,8 +108,8 @@
     cursor: pointer;
     margin-top: 10px;
     width: 100%;
-    font-size: 1em; 
-    font-weight: bold; 
+    font-size: 1em;
+    font-weight: bold;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -116,59 +117,60 @@
 }
 
 .purchase-button:hover {
-    background-color: #7b1fa2; 
+    background-color: #7b1fa2;
 }
 
 .purchase-button .coin-icon {
-    margin-right: 0; 
+    margin-right: 0;
 }
 
 
 @media (max-width: 768px) {
     .shop-container {
-        padding-top: 100px; 
+        padding-top: 100px;
     }
 
     .header-info h1 {
-        font-size: 1.5em; 
+        font-size: 1.5em;
     }
 
     .balance-info {
-        font-size: 1em; 
+        font-size: 1em;
     }
 
     .purchase-item {
-        width: 100%; 
-        max-width: none; 
+        width: 100%;
+        max-width: none;
     }
 
     .item-description {
-        font-size: 0.8em; 
+        font-size: 0.8em;
     }
 }
 
 @media (min-width: 769px)and (max-width: 1024px) {
-    
-    
+
+
     .shop-container {
-        margin-top: 30%;; 
+        margin-top: 30%;
+        ;
     }
 
     .header-info h1 {
-        font-size: 1.5em; 
+        font-size: 1.5em;
     }
 
     .balance-info {
-        font-size: 1em; 
+        font-size: 1em;
     }
 
     .purchase-item {
-        width: 100%; 
-        max-width: none; 
+        width: 100%;
+        max-width: none;
     }
 
     .item-description {
-        font-size: 0.8em; 
+        font-size: 0.8em;
     }
 
     .message-box {
@@ -181,17 +183,17 @@
         opacity: 1;
         transition: opacity 0.3s ease-in-out;
     }
-    
+
     .message-box.success {
         background-color: #d4edda;
         color: #155724;
     }
-    
+
     .message-box.error {
         background-color: #f8d7da;
         color: #721c24;
     }
-    
+
     .close-btn {
         position: absolute;
         top: 5px;
@@ -201,11 +203,12 @@
         font-weight: bold;
         color: inherit;
     }
-    
+
 }
+
 .promo-button {
     margin-top: 15px;
-    background-color: #8a2be2;
+    background-color: #5d1b9a;
     color: white;
     border: none;
     padding: 8px 15px;
@@ -235,7 +238,8 @@
     gap: 10px;
 }
 
-.promo-submit, .promo-cancel {
+.promo-submit,
+.promo-cancel {
     padding: 8px 12px;
     border: none;
     border-radius: 5px;
@@ -252,4 +256,3 @@
     background-color: #f44336;
     color: white;
 }
-

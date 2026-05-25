@@ -123,7 +123,7 @@ const Shop = () => {
         <ProtectedRoute>
             <div className="shop-container">
                 <div className="header-info">
-                    <h1>ROW Store</h1>
+                    <h1>LS Store</h1>
                     <div className="balance-info">
                         <img src={coinImage} alt="Coin" className="coin-icon" />
                         <div className='balance'>{balance}</div>
