@@ -12,8 +12,8 @@ using mabyWorking.Data;
 namespace mabyWorking.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250319170612_IntialiseMigration")]
-    partial class IntialiseMigration
+    [Migration("20260524140404_AddOrgTestStatsTable")]
+    partial class AddOrgTestStatsTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -161,6 +161,31 @@ namespace mabyWorking.Migrations
                     b.ToTable("aspnetusertokens", (string)null);
                 });
 
+            modelBuilder.Entity("QuizAccessRequirement", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<long>("QuizId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("quizid");
+
+                    b.Property<long>("RequiredStatusId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("requiredstatusid");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("QuizId");
+
+                    b.HasIndex("RequiredStatusId");
+
+                    b.ToTable("quizaccessrequirements");
+                });
+
             modelBuilder.Entity("mabyWorking.Data.Identity.ApplicationIdentityUser", b =>
                 {
                     b.Property<string>("Id")
@@ -254,24 +279,171 @@ namespace mabyWorking.Migrations
                 {
                     b.Property<long>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
 
                     b.Property<string>("Link")
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("link");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("name");
 
                     b.Property<string>("Text")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasColumnType("text")
+                        .HasColumnName("text");
 
                     b.HasKey("Id");
 
                     b.ToTable("courses");
+                });
+
+            modelBuilder.Entity("mabyWorking.Models.OrgTest", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)")
+                        .HasColumnName("name");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("org_tests");
+                });
+
+            modelBuilder.Entity("mabyWorking.Models.OrgTestAnswer", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<bool>("IsCorrect")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_correct");
+
+                    b.Property<long>("QuestionId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("question_id");
+
+                    b.Property<string>("Text")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("QuestionId");
+
+                    b.ToTable("org_test_answers");
+                });
+
+            modelBuilder.Entity("mabyWorking.Models.OrgTestQuestion", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<string>("Description")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("description");
+
+                    b.Property<string>("Explanation")
+                        .HasColumnType("text")
+                        .HasColumnName("explanation");
+
+                    b.Property<long>("OrgTestId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("org_test_id");
+
+                    b.Property<int>("RewardRings")
+                        .HasColumnType("integer")
+                        .HasColumnName("reward_rings");
+
+                    b.Property<int>("RewardXp")
+                        .HasColumnType("integer")
+                        .HasColumnName("reward_xp");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrgTestId");
+
+                    b.ToTable("org_test_questions");
+                });
+
+            modelBuilder.Entity("mabyWorking.Models.OrgTestStats", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint")
+                        .HasColumnName("id");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<bool>("IsPassed")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_passed");
+
+                    b.Property<long>("OrgTestId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("org_test_id");
+
+                    b.Property<long>("StatsId")
+                        .HasColumnType("bigint")
+                        .HasColumnName("stats_id");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("OrgTestId");
+
+                    b.HasIndex("StatsId");
+
+                    b.ToTable("org_test_stats");
+                });
+
+            modelBuilder.Entity("mabyWorking.Models.PromoCode", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("ActivationLimit")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("CoinReward")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("ExperienceReward")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("promocodes");
                 });
 
             modelBuilder.Entity("mabyWorking.Models.Question", b =>
@@ -308,7 +480,7 @@ namespace mabyWorking.Migrations
 
                     b.HasIndex("QuizId");
 
-                    b.ToTable("questions");
+                    b.ToTable("question");
                 });
 
             modelBuilder.Entity("mabyWorking.Models.Quiz", b =>
@@ -345,6 +517,10 @@ namespace mabyWorking.Migrations
                         .HasColumnName("id");
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<long>("Id"));
+
+                    b.Property<bool>("IsPassed")
+                        .HasColumnType("boolean")
+                        .HasColumnName("is_passed");
 
                     b.Property<long>("QuizId")
                         .HasColumnType("bigint")
@@ -487,6 +663,30 @@ namespace mabyWorking.Migrations
                     b.ToTable("statuses");
                 });
 
+            modelBuilder.Entity("mabyWorking.Models.UserPromoCode", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("PromoCodeId")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PromoCodeId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("userpromocodes");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -538,6 +738,25 @@ namespace mabyWorking.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("QuizAccessRequirement", b =>
+                {
+                    b.HasOne("mabyWorking.Models.Quiz", "Quiz")
+                        .WithMany()
+                        .HasForeignKey("QuizId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("mabyWorking.Models.Status", "RequiredStatus")
+                        .WithMany()
+                        .HasForeignKey("RequiredStatusId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Quiz");
+
+                    b.Navigation("RequiredStatus");
+                });
+
             modelBuilder.Entity("mabyWorking.Models.Answer", b =>
                 {
                     b.HasOne("mabyWorking.Models.Question", "Question")
@@ -547,6 +766,47 @@ namespace mabyWorking.Migrations
                         .IsRequired();
 
                     b.Navigation("Question");
+                });
+
+            modelBuilder.Entity("mabyWorking.Models.OrgTestAnswer", b =>
+                {
+                    b.HasOne("mabyWorking.Models.OrgTestQuestion", "Question")
+                        .WithMany("Answers")
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Question");
+                });
+
+            modelBuilder.Entity("mabyWorking.Models.OrgTestQuestion", b =>
+                {
+                    b.HasOne("mabyWorking.Models.OrgTest", "OrgTest")
+                        .WithMany("Questions")
+                        .HasForeignKey("OrgTestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("OrgTest");
+                });
+
+            modelBuilder.Entity("mabyWorking.Models.OrgTestStats", b =>
+                {
+                    b.HasOne("mabyWorking.Models.OrgTest", "OrgTest")
+                        .WithMany()
+                        .HasForeignKey("OrgTestId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("mabyWorking.Models.Stats", "Stats")
+                        .WithMany()
+                        .HasForeignKey("StatsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("OrgTest");
+
+                    b.Navigation("Stats");
                 });
 
             modelBuilder.Entity("mabyWorking.Models.Question", b =>
@@ -624,6 +884,35 @@ namespace mabyWorking.Migrations
                     b.Navigation("Status");
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("mabyWorking.Models.UserPromoCode", b =>
+                {
+                    b.HasOne("mabyWorking.Models.PromoCode", "PromoCode")
+                        .WithMany()
+                        .HasForeignKey("PromoCodeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("mabyWorking.Data.Identity.ApplicationIdentityUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("PromoCode");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("mabyWorking.Models.OrgTest", b =>
+                {
+                    b.Navigation("Questions");
+                });
+
+            modelBuilder.Entity("mabyWorking.Models.OrgTestQuestion", b =>
+                {
+                    b.Navigation("Answers");
                 });
 
             modelBuilder.Entity("mabyWorking.Models.Question", b =>

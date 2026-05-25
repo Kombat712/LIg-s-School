@@ -34,7 +34,7 @@ const Skillstree = () => {
             <div className="container_last">
                 <NavLink to="/takeOrNoTake" className="skil-cont">
                     <img src={takeOrNo} alt="Возьмешь или не возьмешь?" />
-                    <p>Возьмëшь <br />не возьмëшь?</p>
+                    <p>Возьмёшь <br />не возьмëшь?</p>
                 </NavLink>
             </div>
         </div>

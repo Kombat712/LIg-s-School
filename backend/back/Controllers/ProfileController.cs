@@ -58,6 +58,17 @@ public class ProfileController : ControllerBase
         );
 
 
+        // Прогресс по тестам организатора (4 теста)
+        var orgTests = await _context.OrgTests.OrderBy(t => t.Id).ToListAsync();
+        var orgTestStats = await _context.OrgTestStats
+            .Where(ts => ts.StatsId == stats.Id)
+            .ToListAsync();
+
+        var orgProgress = orgTests.ToDictionary(
+            t => t.Name,
+            t => orgTestStats.Any(ts => ts.OrgTestId == t.Id && ts.IsPassed) ? 100 : 0
+        );
+
         return Ok(new
         {
             Username = user.UserName,
@@ -65,7 +76,8 @@ public class ProfileController : ControllerBase
             Balance = stats.Balance,
             XP = stats.Xp,
             Status = stats.Status?.Name ?? "Без статуса",
-            Progress = progress
+            Progress = progress,
+            OrgProgress = orgProgress
         });
     }
 
@@ -147,17 +159,15 @@ public class ProfileController : ControllerBase
     [HttpGet("quiz-stats")]
     public async Task<IActionResult> GetQuizStats()
     {
-        
         var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (userId == null) return Unauthorized();
 
         var stats = await _context.Stats.FirstOrDefaultAsync(s => s.UserId == userId);
         if (stats == null) return NotFound("Статистика не найдена");
         
-        var quizLimit = stats.QuizLimit;
-        var quizPassed = quizLimit - stats.QuizPassed;
+        var attemptsLeft = stats.QuizLimit - stats.QuizPassed;
 
-        return Ok(new { quizPassed, quizLimit });
+        return Ok(new { attemptsLeft, totalLimit = stats.QuizLimit });
     }
 
     [HttpGet("statuses")]

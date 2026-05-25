@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace mabyWorking.Migrations
 {
     /// <inheritdoc />
-    public partial class IntialiseMigration : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -55,15 +55,31 @@ namespace mabyWorking.Migrations
                 name: "courses",
                 columns: table => new
                 {
-                    Id = table.Column<long>(type: "bigint", nullable: false)
+                    id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "text", nullable: false),
-                    Text = table.Column<string>(type: "text", nullable: false),
-                    Link = table.Column<string>(type: "text", nullable: true)
+                    name = table.Column<string>(type: "text", nullable: false),
+                    text = table.Column<string>(type: "text", nullable: false),
+                    link = table.Column<string>(type: "text", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_courses", x => x.Id);
+                    table.PrimaryKey("PK_courses", x => x.id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "promocodes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    CoinReward = table.Column<int>(type: "integer", nullable: false),
+                    ExperienceReward = table.Column<int>(type: "integer", nullable: false),
+                    ActivationLimit = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_promocodes", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -202,6 +218,32 @@ namespace mabyWorking.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "userpromocodes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    UserId = table.Column<string>(type: "text", nullable: false),
+                    PromoCodeId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_userpromocodes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_userpromocodes_aspnetusers_UserId",
+                        column: x => x.UserId,
+                        principalTable: "aspnetusers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_userpromocodes_promocodes_PromoCodeId",
+                        column: x => x.PromoCodeId,
+                        principalTable: "promocodes",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "quizes",
                 columns: table => new
                 {
@@ -251,7 +293,7 @@ namespace mabyWorking.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "questions",
+                name: "question",
                 columns: table => new
                 {
                     id = table.Column<long>(type: "bigint", nullable: false)
@@ -264,11 +306,37 @@ namespace mabyWorking.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_questions", x => x.id);
+                    table.PrimaryKey("PK_question", x => x.id);
                     table.ForeignKey(
-                        name: "FK_questions_quizes_quiz_id",
+                        name: "FK_question_quizes_quiz_id",
                         column: x => x.quiz_id,
                         principalTable: "quizes",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "quizaccessrequirements",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    quizid = table.Column<long>(type: "bigint", nullable: false),
+                    requiredstatusid = table.Column<long>(type: "bigint", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_quizaccessrequirements", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_quizaccessrequirements_quizes_quizid",
+                        column: x => x.quizid,
+                        principalTable: "quizes",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_quizaccessrequirements_statuses_requiredstatusid",
+                        column: x => x.requiredstatusid,
+                        principalTable: "statuses",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -280,7 +348,8 @@ namespace mabyWorking.Migrations
                     id = table.Column<long>(type: "bigint", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     stats_id = table.Column<long>(type: "bigint", nullable: false),
-                    quiz_id = table.Column<long>(type: "bigint", nullable: false)
+                    quiz_id = table.Column<long>(type: "bigint", nullable: false),
+                    is_passed = table.Column<bool>(type: "boolean", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -339,9 +408,9 @@ namespace mabyWorking.Migrations
                 {
                     table.PrimaryKey("PK_answers", x => x.id);
                     table.ForeignKey(
-                        name: "FK_answers_questions_question_id",
+                        name: "FK_answers_question_question_id",
                         column: x => x.question_id,
-                        principalTable: "questions",
+                        principalTable: "question",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -389,8 +458,8 @@ namespace mabyWorking.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_questions_quiz_id",
-                table: "questions",
+                name: "IX_question_quiz_id",
+                table: "question",
                 column: "quiz_id");
 
             migrationBuilder.CreateIndex(
@@ -402,6 +471,16 @@ namespace mabyWorking.Migrations
                 name: "IX_quiz_stats_stats_id",
                 table: "quiz_stats",
                 column: "stats_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_quizaccessrequirements_quizid",
+                table: "quizaccessrequirements",
+                column: "quizid");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_quizaccessrequirements_requiredstatusid",
+                table: "quizaccessrequirements",
+                column: "requiredstatusid");
 
             migrationBuilder.CreateIndex(
                 name: "IX_quizes_skill_id",
@@ -427,6 +506,16 @@ namespace mabyWorking.Migrations
                 name: "IX_stats_user_id",
                 table: "stats",
                 column: "user_id");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_userpromocodes_PromoCodeId",
+                table: "userpromocodes",
+                column: "PromoCodeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_userpromocodes_UserId",
+                table: "userpromocodes",
+                column: "UserId");
         }
 
         /// <inheritdoc />
@@ -457,16 +546,25 @@ namespace mabyWorking.Migrations
                 name: "quiz_stats");
 
             migrationBuilder.DropTable(
+                name: "quizaccessrequirements");
+
+            migrationBuilder.DropTable(
                 name: "skill_stats");
 
             migrationBuilder.DropTable(
-                name: "questions");
+                name: "userpromocodes");
+
+            migrationBuilder.DropTable(
+                name: "question");
 
             migrationBuilder.DropTable(
                 name: "aspnetroles");
 
             migrationBuilder.DropTable(
                 name: "stats");
+
+            migrationBuilder.DropTable(
+                name: "promocodes");
 
             migrationBuilder.DropTable(
                 name: "quizes");

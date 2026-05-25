@@ -19,6 +19,10 @@ namespace mabyWorking.Models
         public int QuizLimit { get; set; } = 3;
         [Column("quiz_passed")]
         public int QuizPassed { get; set; } = 0;
+        [Column("org_test_limit")]
+        public int OrgTestLimit { get; set; } = 3;
+        [Column("org_test_passed")]
+        public int OrgTestPassed { get; set; } = 0;
         [Column("xp")]
         public int Xp { get; set; } = 0;
 

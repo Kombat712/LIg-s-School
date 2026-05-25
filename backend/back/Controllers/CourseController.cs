@@ -26,9 +26,6 @@ namespace mabyWorking.Controllers
                 .Select(c => new { c.Id, c.Name })
                 .ToListAsync();
 
-            if (!courseList.Any())
-                return NotFound("Курсы не найдены");
-
             return Ok(courseList);
         }
 

@@ -1,0 +1,26 @@
+# Dependencies
+node_modules/
+frontend/front/node_modules/
+
+# Build output
+frontend/front/dist/
+backend/back/bin/
+backend/back/obj/
+
+# Environment
+frontend/front/.env
+*.env.local
+
+# IDE
+.vs/
+.vscode/
+*.user
+*.suo
+*.sln.docstates
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Dotnet
+*.log

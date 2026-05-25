@@ -16,7 +16,7 @@ namespace mabyWorking
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -46,7 +46,14 @@ namespace mabyWorking
 
             
             builder.Services.AddDefaultIdentity<ApplicationIdentityUser>(options =>
-                options.SignIn.RequireConfirmedAccount = true)
+            {
+                options.SignIn.RequireConfirmedAccount = false;
+                options.Password.RequireDigit = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequiredLength = 6;
+            })
                 .AddEntityFrameworkStores<ApplicationDbContext>();
 
             
@@ -55,9 +62,14 @@ namespace mabyWorking
                 options.LoginPath = "/api/Login/login";
                 options.AccessDeniedPath = "/api/Login/access-denied";
                 options.Cookie.HttpOnly = true;
-                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
                 options.Cookie.SameSite = SameSiteMode.None;
                 options.Cookie.Name = "AuthCookie";
+                options.Events.OnRedirectToLogin = context =>
+                {
+                    context.Response.StatusCode = 401;
+                    return Task.CompletedTask;
+                };
             });
 
 
@@ -104,7 +116,10 @@ namespace mabyWorking
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            if (!app.Environment.IsDevelopment())
+            {
+                app.UseHttpsRedirection();
+            }
             app.UseStaticFiles();
             app.UseRouting();
 
@@ -113,7 +128,9 @@ namespace mabyWorking
             app.UseAuthorization();
 
             app.MapControllers();
+
             app.Run();
         }
+
     }
 }

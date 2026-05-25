@@ -220,6 +220,11 @@ const OrgTest = () => {
               <h2 className={testResult.isPassed ? "result-success" : "result-fail"}>
                 {testResult.isPassed ? "🎉 Тест пройден!" : "❌ Тест не пройден"}
               </h2>
+              {testResult.isFstTime && (
+                <div className="first-time-bonus">
+                  🔥 Это ваш первый проход — награда увеличена в <strong>x1.5</strong>!
+                </div>
+              )}
               <p>🌟 Получено опыта: <strong>{testResult.totalXP}</strong></p>
               <p>💰 Получено монеток: <strong>{testResult.totalRings}</strong></p>
             </div>

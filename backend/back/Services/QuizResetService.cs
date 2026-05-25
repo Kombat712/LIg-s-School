@@ -45,13 +45,14 @@ namespace mabyWorking.Services
                 using var scope = _scopeFactory.CreateScope();
                 var _context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-                await _context.Stats.ExecuteUpdateAsync(s => s.SetProperty(st => st.QuizPassed, 0));
+                await _context.Stats.ExecuteUpdateAsync(s => s
+                    .SetProperty(st => st.QuizPassed, 0));
 
-                _logger.LogInformation("✅ Квизы успешно сброшены на 0 для всех пользователей.");
+                _logger.LogInformation("✅ Квизы и тесты успешно сброшены на 0 для всех пользователей.");
             }
             catch (Exception ex)
             {
-                _logger.LogError($"❌ Ошибка при сбросе квизов: {ex.Message}");
+                _logger.LogError($"❌ Ошибка при сбросе квизов и тестов: {ex.Message}");
             }
         }
     }

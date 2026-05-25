@@ -19,10 +19,11 @@ export const QuizDayStats = () => {
             if (!response.ok) throw new Error("Ошибка загрузки данных");
 
             const data = await response.json();
-            setTotalQuizzes(data.quizLimit);
-            setAvailableQuizzes(data.quizPassed);
-            setTotalOrgTests(data.orgTestLimit);
-            setAvailableOrgTests(data.orgTestPassed);
+            // Бэкенд возвращает { attemptsLeft, totalLimit } — общий пул для квизов и тестов
+            setAvailableQuizzes(data.attemptsLeft ?? 0);
+            setTotalQuizzes(data.totalLimit ?? 3);
+            setAvailableOrgTests(data.attemptsLeft ?? 0);
+            setTotalOrgTests(data.totalLimit ?? 3);
         } catch (error) {
             console.error("Ошибка получения данных пользователя:", error);
         }

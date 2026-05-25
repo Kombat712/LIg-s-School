@@ -23,7 +23,7 @@ import svoyak10 from './../assets/image/svoyak10.png';
 
 const Take_or_No = () => {
 
-  const skillName = "Возьмëшь не возьмëшь?";
+  const skillName = "Возьмёшь не возьмёшь?";
   const quizzes = useQuizzesBySkill(skillName);
   const { availableQuizzes, totalQuizzes } = QuizDayStats();
 

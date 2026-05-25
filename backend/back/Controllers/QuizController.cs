@@ -38,7 +38,7 @@ namespace mabyWorking.Controllers
             var userStats = await _context.Stats.Include(s => s.Status)
             .FirstOrDefaultAsync(s => s.UserId == userId);
             if (userStats == null) return NotFound("Статистика пользователя не найдена");
-            if (userStats.QuizLimit <= 0)
+            if (userStats.QuizLimit <= userStats.QuizPassed)
                 return BadRequest("Недостаточно попыток для прохождения квиза");
             var quiz = await _context.Quizzes.FirstOrDefaultAsync(q => q.Name == quizName);
             if (quiz == null) return NotFound("Квиз не найден");
@@ -87,9 +87,19 @@ namespace mabyWorking.Controllers
             var skill = await _context.Skills.FirstOrDefaultAsync(s => s.Id == quiz.SkillId);
             if (skill == null) return NotFound("Скилл не найден");
             var skillStats = await _context.SkillStats.FirstOrDefaultAsync(s => s.StatsId == userStats.Id && s.SkillId == skill.Id);
-            if (skillStats == null) return NotFound("Статистика скилла не найдена");
+            if (skillStats == null)
+            {
+                skillStats = new SkillStats { StatsId = userStats.Id, SkillId = skill.Id, QuizPassed = 0 };
+                _context.SkillStats.Add(skillStats);
+                await _context.SaveChangesAsync();
+            }
             var quizStats = await _context.QuizStats.FirstOrDefaultAsync(s => s.StatsId == userStats.Id && s.QuizId == quiz.Id);
-            if (quizStats == null) return NotFound("Статистика квиза не найдена");
+            if (quizStats == null)
+            {
+                quizStats = new QuizStats { StatsId = userStats.Id, QuizId = quiz.Id, IsPassed = false };
+                _context.QuizStats.Add(quizStats);
+                await _context.SaveChangesAsync();
+            }
             var lastQuestion = await _context.Questions
                 .Where(q => q.QuizId == quiz.Id)
                 .OrderByDescending(q => q.Id)

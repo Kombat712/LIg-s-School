@@ -7,9 +7,9 @@ public class QuizAccessRequirement
     [ForeignKey("Quiz")]
     [Column("quizid")]
     public long QuizId { get; set; }
-    public Quiz Quiz { get; set; }
+    public Quiz Quiz { get; set; } = null!;
     [ForeignKey("Status")]
     [Column("requiredstatusid")]
     public long RequiredStatusId { get; set; }
-    public Status RequiredStatus { get; set; }
+    public Status RequiredStatus { get; set; } = null!;
 }

@@ -23,6 +23,10 @@ namespace mabyWorking.Data
         public DbSet<PromoCode> PromoCodes { get; set; }
         public DbSet<UserPromoCode> UserPromoCodes { get; set; }
         public DbSet<QuizAccessRequirement> QuizAccessRequirements { get; set; }
+        public DbSet<OrgTest> OrgTests { get; set; }
+        public DbSet<OrgTestQuestion> OrgTestQuestions { get; set; }
+        public DbSet<OrgTestAnswer> OrgTestAnswers { get; set; }
+        public DbSet<OrgTestStats> OrgTestStats { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

@@ -102,6 +102,8 @@ namespace mabyWorking.Controllers
                     Balance = 0,
                     QuizLimit = 3,
                     QuizPassed = 0,
+                    OrgTestLimit = 3,
+                    OrgTestPassed = 0,
                     Xp = 0,
                     StatusId = initialStatusId
                 };
@@ -140,10 +142,17 @@ namespace mabyWorking.Controllers
                 {
                     return BadRequest("Email is required.");
                 }
-                await _emailSender.SendEmailAsync(model.Email, "Подтвердите почту",
-                    $"Пожалуйста подтвердите аккаунт по ссылке <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>Нажать сюда</a>.");
+                try
+                {
+                    await _emailSender.SendEmailAsync(model.Email, "Подтвердите почту",
+                        $"Пожалуйста подтвердите аккаунт по ссылке <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>Нажать сюда</a>.");
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning(ex, "Failed to send confirmation email to {Email}", model.Email);
+                }
 
-                return Ok(new { message = "User registered successfully. Please confirm your email." });
+                return Ok(new { message = "Регистрация успешна. Можете войти в аккаунт." });
             }
 
             return BadRequest(result.Errors);

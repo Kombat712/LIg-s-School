@@ -74,18 +74,18 @@ namespace mabyWorking.Controllers
                     totalPrice = (int)(basePrice * 7.5);
                     break;
                 default:
-                    return BadRequest(new { Message = "Можно приобрести только 1, 5 или 10 квизов" });
+                    return BadRequest(new { Message = "Можно приобрести только 1, 5 или 10 доступов" });
             }
 
             if (stats.Balance < totalPrice)
                 return BadRequest(new { Message = "Недостаточно монет для покупки" });
 
             stats.Balance -= totalPrice;
-            stats.QuizLimit += quantity;
+            stats.QuizLimit += quantity; 
 
             await _context.SaveChangesAsync();
 
-            return Ok(new { Message = $"Покупка прошла успешно! Добавлено квизов: {quantity}" });
+            return Ok(new { Message = $"Покупка прошла успешно! Добавлено доступов: {quantity}" });
         }
     }
 
