@@ -49,9 +49,14 @@ namespace mabyWorking.Scripts
                     ("Каскадные таблицы стилей (аббревиатура)?", "CSS — Cascading Style Sheets.", "css;cascading style sheets"),
                 }),
                 ["Замена НЕизвестного"] = (0, new[] {
-                    ("Что заменяет знак ? в регулярных выражениях?", "Один любой символ.", "один любой символ"),
-                    ("Какой символ используется для замены любого количества символов в маске файла?", "Звёздочка (*).", "*;звёздочка;asterisk"),
-                    ("Что в языке SQL означает NULL?", "Отсутствие значения.", "отсутствие значения;ничего;unknown"),
+                    ("В романе Терри Пратчетта упоминается корень ИКСА, лекарство из которого помогает при различных заболеваниях. Впрочем, вместо корня ИКСА можно взять любой другой. Назовите ИКС словом латинского происхождения.", "Лекарство помогает независимо от того, из чего его сделали — эффект плацебо.", "плацебо"),
+                    ("Шотландская легенда гласит, что феи могут заменять новорождённых на своих детенышей. Однако подмены можно избежать, если ребенок, появившийся на свет, СДЕЛАЕТ ЭТО. По традиции повитухи носили семена растения, чтобы помочь детям. Ответьте одним словом: что мы заменили на \"СДЕЛАТЬ ЭТО\"?", "Если ребёнок чихнёт — феи его не заберут.", "чихнуть;чихнёт;чихнет"),
+                    ("ИКС был образован в 1873 году, после того как, по легенде, граф Сечени опоздал на похороны своего отца из-за начавшегося ледохода. Какое восьмибуквенное название мы заменили на \"ИКС\"?", "Будапешт образован в 1873 году объединением Буды, Обуды и Пешта. Мост Сечени соединил берега.", "Будапешт"),
+                    ("Героиня рассказа Чехова — подручная — не рада тому, что ИКС у хозяев маленький, поскольку это добавляет ей работы. Известен сувенирный ИКС под названием \"Ясная Поляна\". Назовите ИКС.", "Самовар у хозяев маленький — приходится подогревать его раз пять. Ясная Поляна — Тульская область, славящаяся самоварами.", "самовар"),
+                    ("В стихотворении Андрея Вознесенского ИКС стоит буквой \"Х\" [ха]. В ИКСА, упомянутого в названии произведения советского писателя, летели зеленые увесистые ядра. Назовите ИКСА одним словом.", "Стоящий в воротах вратарь с разведёнными руками похож на букву Х. Кассиль — \"Вратарь республики\".", "Вратарь"),
+                    ("Один из персонажей аниме \"Наруто\" способен управлять водой. Чтобы не остаться беспомощным, он использует свои дубинки тонфу в качестве АЛЬФ. Георгий Агрикола утверждает, что понимающему человеку АЛЬФА не нужна. Назовите АЛЬФУ одним словом.", "Лозоходство — поиск воды с помощью лозы. Агрикола считал, что понимающий природу в лозе не нуждается.", "лоза"),
+                    ("Шершеневич говорил: \"Как однажды вспыхнувшая спичка не годна для вторичного пользования, так и вторично употребленная АЛЬФА не производит первоначального блеска\". АЛЬФА к АЛЬФЕ существует — пример тому историк Илья Шифман. Что мы заменили на АЛЬФУ?", "Рифма к слову \"рифма\" — Шифман.", "рифма"),
+                    ("В статье Николая Жарвина о последствиях таяния гренландских льдов упоминаются слова, образованные от топонимов \"Мадейра\" и \"Канары\", заканчивающиеся буквосочетанием \"АЛЬФА\". Какие АЛЬФЫ стали роковыми для правителя?", "Мадейрида и Канарида — в ряду с Атлантидой. Правитель — Юлий Цезарь.", "мартовские"),
                 }),
                 ["МногоЛикие"] = (0, new[] {
                     ("Как называется фигура, у которой все стороны равны?", "Равносторонний многоугольник или квадрат.", "квадрат;равносторонний;правильный"),
@@ -218,6 +223,25 @@ namespace mabyWorking.Scripts
                 }),
             };
 
+            // Удаляем старые данные квиза "Замена НЕизвестного" — заменим на 8 новых вопросов
+            var oldQuiz = await context.Quizzes.FirstOrDefaultAsync(q => q.Name == "Замена НЕизвестного");
+            if (oldQuiz != null)
+            {
+                var oldQuestionIds = await context.Questions
+                    .Where(q => q.QuizId == oldQuiz.Id).Select(q => q.Id).ToListAsync();
+                var oldAnswerIds = await context.Answers
+                    .Where(a => oldQuestionIds.Contains(a.QuestionId)).ToListAsync();
+                context.Answers.RemoveRange(oldAnswerIds);
+                var oldQuestions = await context.Questions
+                    .Where(q => q.QuizId == oldQuiz.Id).ToListAsync();
+                context.Questions.RemoveRange(oldQuestions);
+                var oldQuizStats = await context.QuizStats
+                    .Where(qs => qs.QuizId == oldQuiz.Id).ToListAsync();
+                context.QuizStats.RemoveRange(oldQuizStats);
+                context.Quizzes.Remove(oldQuiz);
+                await context.SaveChangesAsync();
+            }
+
             foreach (var (quizName, (skillIdx, questions)) in quizDefs)
             {
                 var skill = skills[skillIdx];
@@ -250,45 +274,156 @@ namespace mabyWorking.Scripts
                 await context.SaveChangesAsync();
             }
 
-            // --- Тесты организатора: Test 1..4 ---
-            for (int i = 1; i <= 4; i++)
+            // --- Удаляем старые тесты "Test 1..4", заменяем на именные ---
+            var oldTestNames = new[] { "Test 1", "Test 2", "Test 3", "Test 4" };
+            foreach (var oldName in oldTestNames)
             {
-                var testName = $"Test {i}";
-                var test = await context.OrgTests.FirstOrDefaultAsync(t => t.Name == testName);
-                if (test == null)
+                var oldTest = await context.OrgTests.FirstOrDefaultAsync(t => t.Name == oldName);
+                if (oldTest != null)
                 {
-                    test = new Models.OrgTest { Name = testName };
-                    context.OrgTests.Add(test);
+                    var oldQuestionIds = await context.OrgTestQuestions
+                        .Where(q => q.OrgTestId == oldTest.Id).Select(q => q.Id).ToListAsync();
+                    var oldAnswers = await context.OrgTestAnswers
+                        .Where(a => oldQuestionIds.Contains(a.QuestionId)).ToListAsync();
+                    context.OrgTestAnswers.RemoveRange(oldAnswers);
+                    var oldQuestions = await context.OrgTestQuestions
+                        .Where(q => q.OrgTestId == oldTest.Id).ToListAsync();
+                    context.OrgTestQuestions.RemoveRange(oldQuestions);
+                    var oldStats = await context.OrgTestStats
+                        .Where(s => s.OrgTestId == oldTest.Id).ToListAsync();
+                    context.OrgTestStats.RemoveRange(oldStats);
+                    context.OrgTests.Remove(oldTest);
                     await context.SaveChangesAsync();
                 }
+            }
 
-                bool hasQuestions = await context.OrgTestQuestions.AnyAsync(q => q.OrgTestId == test.Id);
-                if (hasQuestions) continue;
+            // --- Тесты организатора с умными названиями ---
+            var orgTestDefs = new Dictionary<string, (string desc, string exp, List<(string, string[])> answers)[]>
+            {
+                ["Организаторский минимум"] = new (string desc, string exp, List<(string, string[])> answers)[] {
+                    ("Сколько человек обычно входит в одну команду ЧГК?", "Классический состав команды ЧГК — 6 человек.",
+                        new List<(string, string[])> { ("6", new[] { "4", "8" }) }),
+                    ("Что должен подготовить организатор перед игрой?", "Перед игрой необходимы и вопросы, и помещение.",
+                        new List<(string, string[])> {
+                            ("Пакет вопросов", new[] { "Призы для зрителей" }),
+                            ("Помещение для игры", new[] { "Призы для зрителей" })
+                        }),
+                    ("Сколько секунд даётся команде на обсуждение вопроса?", "По стандартным правилам — 60 секунд.",
+                        new List<(string, string[])> { ("60", new[] { "30", "120" }) }),
+                },
+                ["Мастерство ведущего"] = new (string desc, string exp, List<(string, string[])> answers)[] {
+                    ("Кто такой ведущий в игре ЧГК?", "Ведущий — человек, который зачитывает вопросы и следит за регламентом.",
+                        new List<(string, string[])> { ("Человек, ведущий игру и зачитывающий вопросы", new[] { "Капитан команды", "Зритель" }) }),
+                    ("Что обязательно должно быть в хорошем вопросе?", "Хороший вопрос имеет однозначный ответ и логичное объяснение.",
+                        new List<(string, string[])> {
+                            ("Однозначный правильный ответ", new[] { "Сложная формулировка с подвохом" }),
+                            ("Логическое обоснование", new[] { "Сложная формулировка с подвохом" })
+                        }),
+                    ("Как называется главный приз в телевизионной игре ЧГК?", "Хрустальная сова — главный приз телевизионной версии.",
+                        new List<(string, string[])> { ("Хрустальная сова", new[] { "Золотая рыбка", "Серебряный кубок" }) }),
+                },
+                ["Апелляционное искусство"] = new (string desc, string exp, List<(string, string[])> answers)[] {
+                    ("Что такое «блиц» в ЧГК?", "Блиц — это серия из трёх коротких вопросов с укороченным временем.",
+                        new List<(string, string[])> { ("Серия из 3 коротких вопросов", new[] { "Один очень сложный вопрос", "Перерыв между раундами" }) }),
+                    ("Какие критерии важны при оценке ответа?", "Принимается ответ, совпадающий с авторским по смыслу и сути.",
+                        new List<(string, string[])> {
+                            ("Соответствие авторскому ответу", new[] { "Красота формулировки" }),
+                            ("Смысловая точность", new[] { "Красота формулировки" })
+                        }),
+                    ("Кто принимает спорные ответы в игре?", "Апелляционное жюри рассматривает спорные ситуации.",
+                        new List<(string, string[])> { ("Апелляционное жюри", new[] { "Капитан соперников", "Зрители" }) }),
+                },
+                ["Турнирный стратег"] = new (string desc, string exp, List<(string, string[])> answers)[] {
+                    ("Сколько вопросов обычно в одном туре синхронной игры?", "Стандартный тур — 12 вопросов.",
+                        new List<(string, string[])> { ("12", new[] { "6", "24" }) }),
+                    ("Что нужно учитывать при составлении пакета вопросов?", "Хороший пакет сбалансирован по сложности и темам.",
+                        new List<(string, string[])> {
+                            ("Баланс сложности", new[] { "Только редкие факты" }),
+                            ("Разнообразие тем", new[] { "Только редкие факты" })
+                        }),
+                    ("Что делает секундант на игре?", "Секундант отсчитывает время обсуждения.",
+                        new List<(string, string[])> { ("Отсчитывает время обсуждения", new[] { "Играет в команде", "Готовит вопросы" }) }),
+                },
+                ["Пакетмейкер"] = new (string desc, string exp, List<(string, string[])> answers)[] {
+                    ("Сколько вопросов нужно для полноценного турнира на 5 туров?", "5 туров × 12 вопросов = 60 вопросов + запас.",
+                        new List<(string, string[])> { ("60", new[] { "36", "48" }) }),
+                    ("Что важно при отборе вопросов в пакет?", "Вопросы должны быть разной сложности, а ответы проверяемыми.",
+                        new List<(string, string[])> {
+                            ("Вопросы разной сложности", new[] { "Только сложные вопросы" }),
+                            ("Проверяемые ответы", new[] { "Только сложные вопросы" })
+                        }),
+                    ("Какой процент вопросов в пакете рекомендуется иметь в запасе?", "Обычно 10-20% запаса на случай замен.",
+                        new List<(string, string[])> { ("10-20%", new[] { "50%", "0%" }) }),
+                },
+                ["Логистика турнира"] = new (string desc, string exp, List<(string, string[])> answers)[] {
+                    ("За сколько минут до начала турнира игроки должны быть на месте?", "Рекомендуется за 15-30 минут для регистрации.",
+                        new List<(string, string[])> { ("15-30 минут", new[] { "5 минут", "1 час" }) }),
+                    ("Что нужно подготовить для команд перед туром?", "Бланки для ответов и ручки.",
+                        new List<(string, string[])> {
+                            ("Бланки для ответов", new[] { "СМС-оповещение" }),
+                            ("Ручки или карандаши", new[] { "СМС-оповещение" })
+                        }),
+                    ("Как часто нужно делать перерывы между турами?", "Обычно после каждых 2-3 туров делают перерыв 5-10 минут.",
+                        new List<(string, string[])> { ("После 2-3 туров", new[] { "После каждого тура", "Никогда" }) }),
+                },
+            };
 
-                var (q1Desc, q1Exp, q1Correct, q1Wrong1, q1Wrong2,
-                     q2Desc, q2Exp, q2Correct1, q2Correct2, q2Wrong,
-                     q3Desc, q3Exp, q3Correct, q3Wrong1, q3Wrong2) = GetTestContent(i);
+            foreach (var (testName, questions) in orgTestDefs)
+            {
+                var test = await context.OrgTests.FirstOrDefaultAsync(t => t.Name == testName);
+                if (test != null) continue;
 
-                var oq1 = new Models.OrgTestQuestion { OrgTestId = test.Id, Description = q1Desc, Explanation = q1Exp, RewardRings = 10, RewardXp = 10 };
-                var oq2 = new Models.OrgTestQuestion { OrgTestId = test.Id, Description = q2Desc, Explanation = q2Exp, RewardRings = 10, RewardXp = 10 };
-                var oq3 = new Models.OrgTestQuestion { OrgTestId = test.Id, Description = q3Desc, Explanation = q3Exp, RewardRings = 10, RewardXp = 10 };
-                context.OrgTestQuestions.AddRange(oq1, oq2, oq3);
+                test = new Models.OrgTest { Name = testName };
+                context.OrgTests.Add(test);
                 await context.SaveChangesAsync();
 
-                context.OrgTestAnswers.AddRange(
-                    new Models.OrgTestAnswer { QuestionId = oq1.Id, Text = q1Correct, IsCorrect = true },
-                    new Models.OrgTestAnswer { QuestionId = oq1.Id, Text = q1Wrong1, IsCorrect = false },
-                    new Models.OrgTestAnswer { QuestionId = oq1.Id, Text = q1Wrong2, IsCorrect = false },
+                foreach (var (desc, exp, answers) in questions)
+                {
+                    var question = new Models.OrgTestQuestion
+                    {
+                        OrgTestId = test.Id,
+                        Description = desc,
+                        Explanation = exp,
+                        RewardRings = 10,
+                        RewardXp = 10
+                    };
+                    context.OrgTestQuestions.Add(question);
+                    await context.SaveChangesAsync();
 
-                    new Models.OrgTestAnswer { QuestionId = oq2.Id, Text = q2Correct1, IsCorrect = true },
-                    new Models.OrgTestAnswer { QuestionId = oq2.Id, Text = q2Correct2, IsCorrect = true },
-                    new Models.OrgTestAnswer { QuestionId = oq2.Id, Text = q2Wrong, IsCorrect = false },
-
-                    new Models.OrgTestAnswer { QuestionId = oq3.Id, Text = q3Correct, IsCorrect = true },
-                    new Models.OrgTestAnswer { QuestionId = oq3.Id, Text = q3Wrong1, IsCorrect = false },
-                    new Models.OrgTestAnswer { QuestionId = oq3.Id, Text = q3Wrong2, IsCorrect = false }
-                );
+                    foreach (var (text, wrong) in answers)
+                    {
+                        context.OrgTestAnswers.Add(new Models.OrgTestAnswer
+                        {
+                            QuestionId = question.Id,
+                            Text = text,
+                            IsCorrect = true
+                        });
+                        foreach (var w in wrong)
+                        {
+                            context.OrgTestAnswers.Add(new Models.OrgTestAnswer
+                            {
+                                QuestionId = question.Id,
+                                Text = w,
+                                IsCorrect = false
+                            });
+                        }
+                    }
+                }
                 await context.SaveChangesAsync();
+            }
+
+            // --- Курсы для организаторов (умные названия) ---
+            var orgCourseDefs = new[] {
+                ("Искусство пакета: отбор и редактура", "Как собрать сбалансированный пакет вопросов, отсеять лишнее и отредактировать формулировки. Курс для тех, кто хочет составлять пакеты, которые будут интересны и новичкам, и маститым знатокам.", ""),
+                ("Мастерство ведущего: голос, темп, регламент", "Как правильно читать вопросы, держать темп игры и соблюдать регламент. Научитесь управлять вниманием зала и не сбиваться даже в стрессовых ситуациях.", ""),
+                ("Апелляция и спорные моменты: искусство компромисса", "Как принимать спорные ответы, работать с апелляционным жюри и сохранять справедливость. Курс для организаторов, которые хотят избежать конфликтов на турнирах.", ""),
+            };
+            foreach (var (name, text, link) in orgCourseDefs)
+            {
+                if (!await context.Courses.AnyAsync(c => c.Name == name))
+                {
+                    context.Courses.Add(new Models.Course { Name = name, Text = text, Link = link });
+                }
             }
 
             // --- Курсы (проверяем по имени, чтобы не дублировать) ---
@@ -323,70 +458,6 @@ namespace mabyWorking.Scripts
             await context.SaveChangesAsync();
         }
 
-        private static (string, string, string, string, string,
-                        string, string, string, string, string,
-                        string, string, string, string, string) GetTestContent(int testNumber)
-        {
-            return testNumber switch
-            {
-                1 => (
-                    "Сколько человек обычно входит в одну команду ЧГК?",
-                    "Классический состав команды ЧГК — 6 человек.",
-                    "6", "4", "8",
 
-                    "Что должен подготовить организатор перед игрой? (выберите всё верное)",
-                    "Перед игрой необходимы и вопросы, и помещение.",
-                    "Пакет вопросов", "Помещение для игры", "Призы для зрителей",
-
-                    "Сколько секунд даётся команде на обсуждение вопроса?",
-                    "По стандартным правилам — 60 секунд (минута).",
-                    "60", "30", "120"
-                ),
-                2 => (
-                    "Кто такой ведущий в игре ЧГК?",
-                    "Ведущий — это человек, который зачитывает вопросы и следит за регламентом.",
-                    "Человек, ведущий игру и зачитывающий вопросы", "Капитан команды", "Зритель",
-
-                    "Что обязательно должно быть в хорошем вопросе? (выберите всё верное)",
-                    "Хороший вопрос имеет однозначный ответ и логичное объяснение.",
-                    "Однозначный правильный ответ", "Логическое обоснование", "Сложная формулировка с подвохом",
-
-                    "Как называется главный приз в традиционной игре ЧГК?",
-                    "Хрустальная сова — главный приз телевизионной версии.",
-                    "Хрустальная сова", "Золотая рыбка", "Серебряный кубок"
-                ),
-                3 => (
-                    "Что такое «блиц» в ЧГК?",
-                    "Блиц — это серия из трёх коротких вопросов с укороченным временем.",
-                    "Серия из 3 коротких вопросов", "Один очень сложный вопрос", "Перерыв между раундами",
-
-                    "Какие критерии важны при оценке ответа? (выберите всё верное)",
-                    "Принимается ответ, совпадающий с авторским по смыслу и сути.",
-                    "Соответствие авторскому ответу", "Смысловая точность", "Красота формулировки",
-
-                    "Кто принимает спорные ответы в игре?",
-                    "Апелляционное жюри рассматривает спорные ситуации.",
-                    "Апелляционное жюри", "Капитан соперников", "Зрители"
-                ),
-                4 => (
-                    "Сколько вопросов обычно в одном туре синхронной игры?",
-                    "Стандартный тур — 12 вопросов.",
-                    "12", "6", "24",
-
-                    "Что нужно учитывать при составлении пакета вопросов? (выберите всё верное)",
-                    "Хороший пакет сбалансирован по сложности и темам.",
-                    "Баланс сложности", "Разнообразие тем", "Только редкие факты",
-
-                    "Что делает секундант на игре?",
-                    "Секундант отсчитывает время обсуждения.",
-                    "Отсчитывает время обсуждения", "Играет в команде", "Готовит вопросы"
-                ),
-                _ => (
-                    "Вопрос 1?", "Объяснение 1.", "Верно", "Неверно 1", "Неверно 2",
-                    "Вопрос 2?", "Объяснение 2.", "Верно А", "Верно Б", "Неверно",
-                    "Вопрос 3?", "Объяснение 3.", "Верно", "Неверно 1", "Неверно 2"
-                )
-            };
-        }
     }
 }

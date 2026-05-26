@@ -129,6 +129,18 @@ namespace mabyWorking
 
             app.MapControllers();
 
+            // Apply migrations and seed data on startup
+            using (var scope = app.Services.CreateScope())
+            {
+                var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+                var pendingMigrations = await db.Database.GetPendingMigrationsAsync();
+                if (pendingMigrations.Any())
+                {
+                    await db.Database.MigrateAsync();
+                }
+                await mabyWorking.Scripts.Seeder.SeedData(db);
+            }
+
             app.Run();
         }
 

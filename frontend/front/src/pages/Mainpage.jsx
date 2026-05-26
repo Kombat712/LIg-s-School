@@ -7,7 +7,7 @@ const Mainpage = () => {
     return (
         <>
             <div className="container_main">
-                <img src={logoms} alt="Логотип Rings of Wisdom" className="logoms" />
+                <img src={logoms} alt="Логотип Школы ЛИИ" className="logoms" />
 
                 <div className="text-container_main">
                     <p className="description_main">
